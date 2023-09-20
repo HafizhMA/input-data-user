@@ -1,6 +1,27 @@
 import { useState } from "react";
 import "./App.css";
 
+const dataUser = [
+  {
+    id: 1,
+    nama: "Adam",
+    umur: 20,
+    jeniskelamin: "Laki-laki",
+  },
+  {
+    id: 2,
+    nama: "Budi",
+    umur: 25,
+    jeniskelamin: "Laki-laki",
+  },
+  {
+    id: 3,
+    nama: "Citra",
+    umur: 22,
+    jeniskelamin: "Perempuan",
+  },
+];
+
 function App() {
   return (
     <>
