@@ -30,6 +30,7 @@ function App() {
   });
 
   const [selectedId, setSelectedId] = useState(-1);
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,34 +42,67 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newUser = {
-      id: Date.now(),
-      ...formData,
-    };
-    setDataUser([...dataUser, newUser]);
+    if (isUpdateMode) {
+      const updatedUser = {
+        id: selectedId,
+        ...formData,
+      };
+
+      const updatedDataUser = dataUser.map((user) =>
+        user.id === selectedId ? updatedUser : user
+      );
+
+      setDataUser(updatedDataUser);
+
+      setFormData({
+        nama: "",
+        umur: "",
+        jeniskelamin: "Laki-laki",
+      });
+      setSelectedId(-1);
+      setIsUpdateMode(false);
+    } else {
+      const newUser = {
+        id: Date.now(),
+        ...formData,
+      };
+      setDataUser([...dataUser, newUser]);
+      setFormData({
+        nama: "",
+        umur: "",
+        jeniskelamin: "Laki-laki",
+      });
+    }
+  };
+
+  const handleUpdate = (user) => {
+    setIsUpdateMode(true);
     setFormData({
-      nama: "",
-      umur: "",
-      jeniskelamin: "Laki-laki",
+      id: user.id,
+      nama: user.nama,
+      umur: user.umur,
+      jeniskelamin: user.jeniskelamin,
     });
+    setSelectedId(user.id);
   };
 
   const handleDelete = (userId) => {
-    // Filter dataUser untuk menghapus data dengan ID yang sesuai
     const newDataUser = dataUser.filter((user) => user.id !== userId);
     setDataUser(newDataUser);
   };
-  console.log(dataUser);
+
   return (
     <>
       <section className="min-h-screen flex justify-center items-center">
         <div className="container mx-auto bg-gray-600 text-white rounded-sm p-7">
-          <h1 className="text-center font-bold">input data user</h1>
-          <div className="form-container mb-4">
+          <div className="update-form-container">
+            <h1 className="text-center font-bold">
+              {isUpdateMode ? "Update" : "input"} Data User
+            </h1>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="block text-sm font-bold mb-2" htmlFor="nama">
-                  nama
+                  Nama
                 </label>
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -78,12 +112,12 @@ function App() {
                   value={formData.nama}
                   onChange={handleInputChange}
                   required
-                  placeholder="nama"
+                  placeholder="Nama"
                 />
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-bold mb-2" htmlFor="umur">
-                  umur
+                  Umur
                 </label>
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -93,7 +127,7 @@ function App() {
                   value={formData.umur}
                   onChange={handleInputChange}
                   required
-                  placeholder="umur"
+                  placeholder="Umur"
                 />
               </div>
               <div className="mb-4">
@@ -101,7 +135,7 @@ function App() {
                   className="block text-sm font-bold mb-2"
                   htmlFor="jenis-kelamin"
                 >
-                  jenis-kelamin
+                  Jenis Kelamin
                 </label>
                 <select
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -118,86 +152,24 @@ function App() {
               </div>
               <div className="mb-4">
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Submit
+                  {isUpdateMode ? "Update" : "Submit"}
                 </button>
               </div>
             </form>
           </div>
-          <div
-            style={{ display: selectedId !== -1 ? "block" : "none" }}
-            className="update-form-container"
-          >
-            <h1 className="text-center font-bold">update data user</h1>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2" htmlFor="nama">
-                  nama
-                </label>
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="text"
-                  id="nama"
-                  name="nama"
-                  value={formData.nama}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="nama"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-bold mb-2" htmlFor="umur">
-                  umur
-                </label>
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="number"
-                  id="umur"
-                  name="umur"
-                  value={formData.umur}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="umur"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="block text-sm font-bold mb-2"
-                  htmlFor="jenis-kelamin"
-                >
-                  jenis-kelamin
-                </label>
-                <select
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="jeniskelamin"
-                  name="jeniskelamin"
-                  value={formData.jeniskelamin}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="Laki-laki">Laki-laki</option>
-                  <option value="Perempuan">Perempuan</option>
-                </select>
-                <br />
-              </div>
-              <div className="mb-4">
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
+
           <div className="output-Container">
             {dataUser.map((user) => (
               <div
                 className="user-data mb-4 bg-slate-200 text-slate-900 rounded-sm p-3"
                 key={user.id}
               >
-                <p>nama: {user.nama}</p>
-                <p>umur: {user.umur}</p>
-                <p>jenis-kelamin: {user.jeniskelamin}</p>
+                <p>Nama: {user.nama}</p>
+                <p>Umur: {user.umur}</p>
+                <p>Jenis Kelamin: {user.jeniskelamin}</p>
                 <div className="button-action flex justify-end mt-4">
                   <button
-                    onClick={() => setSelectedId(user.id)}
+                    onClick={() => handleUpdate(user)}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded me-3"
                   >
                     Update
