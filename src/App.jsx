@@ -50,6 +50,13 @@ function App() {
       jeniskelamin: "Laki-laki",
     });
   };
+
+  const handleDelete = (userId) => {
+    // Filter dataUser untuk menghapus data dengan ID yang sesuai
+    const newDataUser = dataUser.filter((user) => user.id !== userId);
+    setDataUser(newDataUser);
+  };
+  console.log(dataUser);
   return (
     <>
       <section className="min-h-screen flex justify-center items-center">
@@ -58,7 +65,7 @@ function App() {
           <div className="form-container">
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-sm font-bold mb-2" for="nama">
+                <label className="block text-sm font-bold mb-2" htmlFor="nama">
                   nama
                 </label>
                 <input
@@ -73,7 +80,7 @@ function App() {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-bold mb-2" for="umur">
+                <label className="block text-sm font-bold mb-2" htmlFor="umur">
                   umur
                 </label>
                 <input
@@ -90,7 +97,7 @@ function App() {
               <div className="mb-4">
                 <label
                   className="block text-sm font-bold mb-2"
-                  for="jenis-kelamin"
+                  htmlFor="jenis-kelamin"
                 >
                   jenis-kelamin
                 </label>
@@ -123,6 +130,14 @@ function App() {
                 <p>nama: {user.nama}</p>
                 <p>umur: {user.umur}</p>
                 <p>jenis-kelamin: {user.jeniskelamin}</p>
+                <div className="button-action flex justify-end mt-4">
+                  <button
+                    onClick={() => handleDelete(user.id)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
