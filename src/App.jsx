@@ -2,6 +2,12 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
+  const initialFormData = {
+    nama: "",
+    umur: "",
+    jeniskelamin: "Laki-laki",
+  };
+
   const [dataUser, setDataUser] = useState([
     {
       id: 1,
@@ -23,14 +29,8 @@ function App() {
     },
   ]);
 
-  const [formData, setFormData] = useState({
-    nama: "",
-    umur: "",
-    jeniskelamin: "laki-laki",
-  });
-
+  const [formData, setFormData] = useState(initialFormData);
   const [selectedId, setSelectedId] = useState(-1);
-  const [isUpdateMode, setIsUpdateMode] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,7 +42,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isUpdateMode) {
+    if (selectedId !== -1) {
       const updatedUser = {
         id: selectedId,
         ...formData,
@@ -54,36 +54,20 @@ function App() {
 
       setDataUser(updatedDataUser);
 
-      setFormData({
-        nama: "",
-        umur: "",
-        jeniskelamin: "Laki-laki",
-      });
       setSelectedId(-1);
-      setIsUpdateMode(false);
     } else {
       const newUser = {
         id: Date.now(),
         ...formData,
       };
       setDataUser([...dataUser, newUser]);
-      setFormData({
-        nama: "",
-        umur: "",
-        jeniskelamin: "Laki-laki",
-      });
     }
+    setFormData(initialFormData);
   };
 
   const handleUpdate = (user) => {
-    setIsUpdateMode(true);
-    setFormData({
-      id: user.id,
-      nama: user.nama,
-      umur: user.umur,
-      jeniskelamin: user.jeniskelamin,
-    });
     setSelectedId(user.id);
+    setFormData(user);
   };
 
   const handleDelete = (userId) => {
@@ -97,7 +81,7 @@ function App() {
         <div className="container mx-auto bg-gray-600 text-white rounded-sm p-7">
           <div className="update-form-container">
             <h1 className="text-center font-bold">
-              {isUpdateMode ? "Update" : "input"} Data User
+              {selectedId !== -1 ? "Update" : "Input"} Data User
             </h1>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
@@ -152,7 +136,7 @@ function App() {
               </div>
               <div className="mb-4">
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  {isUpdateMode ? "Update" : "Submit"}
+                  {selectedId !== -1 ? "Update" : "Submit"}
                 </button>
               </div>
             </form>
