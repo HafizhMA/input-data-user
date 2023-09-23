@@ -47,6 +47,7 @@ function App() {
         id: selectedId,
         ...formData,
       };
+      console.log(formData);
 
       const updatedDataUser = dataUser.map((user) =>
         user.id === selectedId ? updatedUser : user
@@ -68,6 +69,7 @@ function App() {
   const handleUpdate = (user) => {
     setSelectedId(user.id);
     setFormData(user);
+    console.log(user);
   };
 
   const handleDelete = (userId) => {
