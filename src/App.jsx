@@ -73,6 +73,7 @@ function App() {
   const handleDelete = (userId) => {
     const newDataUser = dataUser.filter((user) => user.id !== userId);
     setDataUser(newDataUser);
+    setSelectedId(-1);
   };
 
   return (
