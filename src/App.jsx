@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
@@ -8,29 +8,35 @@ function App() {
     jeniskelamin: "Laki-laki",
   };
 
-  const [dataUser, setDataUser] = useState([
-    {
-      id: 1,
-      nama: "Adam",
-      umur: 20,
-      jeniskelamin: "Laki-laki",
-    },
-    {
-      id: 2,
-      nama: "Budi",
-      umur: 25,
-      jeniskelamin: "Laki-laki",
-    },
-    {
-      id: 3,
-      nama: "Citra",
-      umur: 22,
-      jeniskelamin: "Perempuan",
-    },
-  ]);
+  const [dataUser, setDataUser] = useState(
+    JSON.parse(localStorage.getItem("dataUser")) || [
+      {
+        id: 1,
+        nama: "Adam",
+        umur: 20,
+        jeniskelamin: "Laki-laki",
+      },
+      {
+        id: 2,
+        nama: "Budi",
+        umur: 25,
+        jeniskelamin: "Laki-laki",
+      },
+      {
+        id: 3,
+        nama: "Citra",
+        umur: 22,
+        jeniskelamin: "Perempuan",
+      },
+    ]
+  );
 
   const [formData, setFormData] = useState(initialFormData);
   const [selectedId, setSelectedId] = useState(-1);
+
+  useEffect(() => {
+    localStorage.setItem("dataUser", JSON.stringify(dataUser));
+  }, [dataUser]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -47,13 +53,13 @@ function App() {
         id: selectedId,
         ...formData,
       };
-      console.log(formData);
+      console.log(updatedUser);
 
       const updatedDataUser = dataUser.map((user) =>
         user.id === selectedId ? updatedUser : user
       );
-
       setDataUser(updatedDataUser);
+      console.log(dataUser);
 
       setSelectedId(-1);
     } else {
