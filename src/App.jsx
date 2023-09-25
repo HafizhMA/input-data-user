@@ -8,31 +8,34 @@ function App() {
     jeniskelamin: "Laki-laki",
   };
 
+  const initialDataUser = [
+    {
+      id: 1,
+      nama: "Adam",
+      umur: 20,
+      jeniskelamin: "Laki-laki",
+    },
+    {
+      id: 2,
+      nama: "Budi",
+      umur: 25,
+      jeniskelamin: "Laki-laki",
+    },
+    {
+      id: 3,
+      nama: "Citra",
+      umur: 22,
+      jeniskelamin: "Perempuan",
+    },
+  ];
+
   const [dataUser, setDataUser] = useState(
-    JSON.parse(localStorage.getItem("dataUser")) || [
-      {
-        id: 1,
-        nama: "Adam",
-        umur: 20,
-        jeniskelamin: "Laki-laki",
-      },
-      {
-        id: 2,
-        nama: "Budi",
-        umur: 25,
-        jeniskelamin: "Laki-laki",
-      },
-      {
-        id: 3,
-        nama: "Citra",
-        umur: 22,
-        jeniskelamin: "Perempuan",
-      },
-    ]
+    JSON.parse(localStorage.getItem("dataUser")) || initialDataUser
   );
 
   const [formData, setFormData] = useState(initialFormData);
   const [selectedId, setSelectedId] = useState(-1);
+  const [searchUser, setSearchUser] = useState("");
 
   useEffect(() => {
     localStorage.setItem("dataUser", JSON.stringify(dataUser));
@@ -83,6 +86,12 @@ function App() {
     setDataUser(newDataUser);
     setSelectedId(-1);
   };
+
+  const filteredUser = searchUser
+    ? dataUser.filter((user) =>
+        user.nama.toLowerCase().includes(searchUser.toLowerCase())
+      )
+    : dataUser;
 
   return (
     <>
@@ -152,30 +161,43 @@ function App() {
           </div>
 
           <div className="output-Container">
-            {dataUser.map((user) => (
-              <div
-                className="user-data mb-4 bg-slate-200 text-slate-900 rounded-sm p-3"
-                key={user.id}
-              >
-                <p>Nama: {user.nama}</p>
-                <p>Umur: {user.umur}</p>
-                <p>Jenis Kelamin: {user.jeniskelamin}</p>
-                <div className="button-action flex justify-end mt-4">
-                  <button
-                    onClick={() => handleUpdate(user)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded me-3"
-                  >
-                    Update
-                  </button>
-                  <button
-                    onClick={() => handleDelete(user.id)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Delete
-                  </button>
+            <div className="search-container mb-3">
+              <input
+                className="rounded-sm text-black"
+                type="text"
+                placeholder="Cari nama user..."
+                value={searchUser}
+                onChange={(e) => setSearchUser(e.target.value)}
+              />
+            </div>
+            {filteredUser.length === 0 ? (
+              <p>data user tidak ditemukan...</p>
+            ) : (
+              filteredUser.map((user) => (
+                <div
+                  className="user-data mb-4 bg-slate-200 text-slate-900 rounded-sm p-3"
+                  key={user.id}
+                >
+                  <p>Nama: {user.nama}</p>
+                  <p>Umur: {user.umur}</p>
+                  <p>Jenis Kelamin: {user.jeniskelamin}</p>
+                  <div className="button-action flex justify-end mt-4">
+                    <button
+                      onClick={() => handleUpdate(user)}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded me-3"
+                    >
+                      Update
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </section>
