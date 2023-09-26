@@ -5,7 +5,7 @@
 **Step 1:** Fork and clone this repository.
 
 ```bash
-git clone https://github.com/{user}/Meals.git
+git clone https://github.com/{user}/input-data-user.git
 ```
 
 **Step 2:** Install dependencies.
